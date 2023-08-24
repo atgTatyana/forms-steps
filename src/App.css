@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+.material-icons {
+  width: 15%;
+  cursor: pointer;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.form {
+  display: flex;
+  gap: 20px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+input, .form-button {
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+}
+
+.table-title {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px auto;
+}
+
+table {
+  width: 100%;
+  border: 2px solid black;
+  border-radius: 20px;
+}
+
+.table-row {
+  text-align: center;
+}
+
+td {
+  width: 35%;
+  padding: 10px 0;
+}
