@@ -3,20 +3,19 @@ import { TableItem } from "./TableItem";
 
 export interface IForm {
   date: string,
-  km: number | string,
+  km: number,
 }
 
 export const StepsForm = () => {
   const [form, setForm] = useState<IForm>({
     date: "",
-    km: "",
+    km: 0,
   })
 
   const [formArray, setFormArray] = useState<IForm[]>([]);
 
   const handleRemove = (date: string) => {
     setFormArray(prev => prev.filter(item => item.date !== date))
-    console.log(date, formArray)
   }
 
   const handleEdit = (item: IForm) => {
@@ -34,23 +33,24 @@ export const StepsForm = () => {
     }
 
     function compare(a: string, b: string) {
-      const a1 = new Date(Number(a.slice(6)), Number(a.slice(3,5)) - 1, Number(a.slice(0,2)));
-      const b1 = new Date(Number(b.slice(6)), Number(b.slice(3,5)) - 1, Number(b.slice(0,2)));
-      return b1 - a1;
+      const a1: Date = new Date(Number(a.slice(6)), Number(a.slice(3,5)) - 1, Number(a.slice(0,2)));
+      const b1: Date = new Date(Number(b.slice(6)), Number(b.slice(3,5)) - 1, Number(b.slice(0,2)));
+      return b1.getTime() - a1.getTime();
     }
 
-    const index = formArray.findIndex(form => form.date === date);
-    if (index !== -1) {
-      formArray[index].km = Number(formArray[index].km) + Number(form.km);
+    const isDate = formArray.find(item => item.date === date);
+    if (isDate) {
+      setFormArray(prev => prev.map(item => item.date === date ?
+        {date, km: Number(item.km) + Number(form.km)} : item))
     } else {
-      formArray.push(form);
-      formArray.sort((a: IForm, b: IForm) => compare(a.date, b.date));
+      setFormArray([...formArray, form]);
+      setFormArray(prev => prev.sort((a: IForm, b: IForm) => compare(a.date, b.date)));
     }
 
     console.log(formArray);
     setForm({
       date: "",
-      km: "",
+      km: 0,
     })
   }
 
