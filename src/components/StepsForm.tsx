@@ -20,31 +20,24 @@ export const StepsForm = () => {
 
   const handleEdit = (item: IForm) => {
     setForm({
-      date: item.date,
+      date: item.date.replace(/(\d{2}).(\d{2}).(\d{2})/, '20$3-$2-$1'),
       km: item.km,
     })
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let {date} = form;
-    if (date.length === 8) {
-      form.date = date =  date.slice(0,6) + "20" + date.slice(6);
-    }
+    form.date = form.date.replace(/20(\d{2})-(\d{2})-(\d{2})/, '$3.$2.$1');
 
-    function compare(a: string, b: string) {
-      const a1: Date = new Date(Number(a.slice(6)), Number(a.slice(3,5)) - 1, Number(a.slice(0,2)));
-      const b1: Date = new Date(Number(b.slice(6)), Number(b.slice(3,5)) - 1, Number(b.slice(0,2)));
-      return b1.getTime() - a1.getTime();
-    }
-
-    const isDate = formArray.find(item => item.date === date);
+    const isDate = formArray.find(item => item.date === form.date);
     if (isDate) {
-      setFormArray(prev => prev.map(item => item.date === date ?
-        {date, km: Number(item.km) + Number(form.km)} : item))
+      setFormArray(prev => prev.map(item => item.date === form.date ?
+        {date: form.date, km: Number(item.km) + Number(form.km)} : item))
     } else {
       setFormArray([...formArray, form]);
-      setFormArray(prev => prev.sort((a: IForm, b: IForm) => compare(a.date, b.date)));
+      setFormArray(prev => prev.sort((a: IForm, b: IForm) =>
+        new Date(a.date.replace(/^(\d{2}).(\d{2})/, '$2.$1')).getTime() < 
+        new Date(b.date.replace(/^(\d{2}).(\d{2})/, '$2.$1')).getTime() ? 1 : -1));
     }
 
     console.log(formArray);
@@ -67,8 +60,8 @@ export const StepsForm = () => {
     <>
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-item">
-          <label htmlFor="date">Дата (ДД.ММ.ГГ)</label>
-          <input id="date" type="text" name="date" value={form.date} onChange={handleChange}/>
+          <label htmlFor="date">Дата (ДД.ММ.ГГГГ)</label>
+          <input id="date" type="date" name="date" value={form.date} onChange={handleChange}/>
         </div>
         <div className="form-item">
           <label htmlFor="km">Пройдено км</label>
